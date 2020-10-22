@@ -15,7 +15,7 @@ public class BaseShip extends Sprite{
     private Vector2 endPosition;        // конечноая точка
     private Vector2 tmp;
 
-    public BaseShip(/*String texturePath*/Texture texture, float startX, float startY, float speed) {
+    public BaseShip(Texture texture, float startX, float startY, float speed) {
         super(new TextureRegion(texture));
         pos.set(new Vector2(startX - (regions[frame].getRegionWidth() / 2f), startY));
         setSize(regions[frame].getRegionWidth(), regions[frame].getRegionHeight());
@@ -39,8 +39,8 @@ public class BaseShip extends Sprite{
         return position;
     }
 
-    public void setEndPosition(float x, float y) {
-        endPosition.set(x - (regions[frame].getRegionWidth() / 2f), y - (regions[frame].getRegionHeight() / 2f)); // конечная позиция с учетом размеров объекта
+    public void setEndPosition(Vector2 touch) {
+        endPosition.set(touch.x, touch.y); // конечная позиция с учетом размеров объекта
         direction = endPosition.cpy().sub(pos).setLength(speed);                   // расчет направления движения до конечной позиции с учетом скорости
         System.out.println(pos.x + "-" + pos.y + "-" + halfHeight + "-" + halfWidth);
     }

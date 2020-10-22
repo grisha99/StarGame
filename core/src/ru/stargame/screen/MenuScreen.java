@@ -2,7 +2,9 @@ package ru.stargame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.stargame.base.BaseScreen;
 import ru.stargame.base.BaseShip;
@@ -26,7 +28,7 @@ public class MenuScreen extends BaseScreen {
         bgImg = new Texture("textures/bgH.jpg");
         pShip = new Texture("spaceship64.png");
         background = new Background(new TextureRegion(bgImg));
-        playerShip = new PlayerShip(pShip, Gdx.graphics.getWidth() / 2f, 0, 3f);
+        playerShip = new PlayerShip(pShip, Gdx.graphics.getWidth() / 2f, 0, 0.01f);
     }
 
     @Override
@@ -48,13 +50,14 @@ public class MenuScreen extends BaseScreen {
     }
     
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        playerShip.setEndPosition(screenX, Gdx.graphics.getHeight() - screenY);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        playerShip.setEndPosition(touch);
         return false;
     }
 
     @Override
     public void dispose() {
+        pShip.dispose();
         bgImg.dispose();
         super.dispose();
     }

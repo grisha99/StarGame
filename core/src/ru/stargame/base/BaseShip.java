@@ -1,57 +1,54 @@
 package ru.stargame.base;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class BaseShip {
+import ru.stargame.math.Rect;
 
-    private Texture texture;            // изображение объекта
+public class BaseShip extends Sprite{
+
+//    private Texture texture;            // изображение объекта
     private Vector2 position;           // текущая позиция
     private float speed;                // скорость передвижения
     private Vector2 direction;          // направление движения (нормализована)
     private Vector2 endPosition;        // конечноая точка
     private Vector2 tmp;
 
-    public BaseShip(String texturePath, float startX, float startY, float speed) {
-        texture = new Texture(texturePath);
-        position = new Vector2(startX - (texture.getWidth() / 2f), startY); // начальное позиционироване (внизу по середине экрана)
+    public BaseShip(Texture texture, float startX, float startY, float speed) {
+        super(new TextureRegion(texture));
+        pos.set(new Vector2(startX - (regions[frame].getRegionWidth() / 2f), startY));
+        setSize(regions[frame].getRegionWidth(), regions[frame].getRegionHeight());
         this.speed = speed;
-        endPosition = position.cpy();
+        endPosition = pos.cpy();
         direction = new Vector2();
         tmp = new Vector2();
     }
 
     public void move() {
         tmp.set(endPosition);
-        if (tmp.sub(position).len() >= direction.len()) {       // конечная точка не достигнута
-            position.add(direction);                            // сл.позиция
-        } else {                                                // объект достиг конечной точки
-            position.set(endPosition);                          // ровняем текущую позицию с конечной (для точности)
-        }
-    }
 
-    public Texture getTexture() {
-        return texture;
+        if (tmp.sub(pos).len() >= direction.len()) {       // конечная точка не достигнута
+            pos.add(direction);                            // сл.позиция
+        } else {                                                // объект достиг конечной точки
+            pos.set(endPosition);                          // ровняем текущую позицию с конечной (для точности)
+        }
     }
 
     public Vector2 getPosition() {
         return position;
     }
 
-    public float getSpeed() {
-        return speed;
+    public void setEndPosition(Vector2 touch) {
+        endPosition.set(touch.x, touch.y); // конечная позиция с учетом размеров объекта
+        direction = endPosition.cpy().sub(pos).setLength(speed);                   // расчет направления движения до конечной позиции с учетом скорости
+        System.out.println(pos.x + "-" + pos.y + "-" + halfHeight + "-" + halfWidth);
     }
-
-    public Vector2 getDirection() {
-        return direction;
-    }
-
-    public Vector2 getEndPosition() {
-        return endPosition;
-    }
-
-    public void setEndPosition(float x, float y) {
-        endPosition.set(x - (texture.getWidth() / 2f), y - (texture.getHeight() / 2f)); // конечная позиция с учетом размеров объекта
-        direction = endPosition.cpy().sub(position).setLength(speed);                   // расчет направления движения до конечной позиции с учетом скорости
+    
+    @Override
+    public void resize(Rect worldBounds) {
+        setHeightProportion(0.11f);
+        pos.set(worldBounds.pos);
+        setBottom(worldBounds.getBottom());
     }
 }

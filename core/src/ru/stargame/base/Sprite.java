@@ -18,6 +18,17 @@ public class Sprite extends Rect {
         regions[0] = region;
     }
     
+    /**
+     *
+     * @param region - исходный регион с множеством однотипных картинок
+     * @param rowCount - кол-во строк в регионе
+     * @param colCount - кол-во столбцов в регионе
+     * @param frameCount - кол-во текстур (массив может быть не полным)
+     */
+    public Sprite(TextureRegion region, int rowCount, int colCount, int frameCount) {
+        this.regions = Sprite.getRegionArr(region, rowCount, colCount, frameCount);
+    }
+    
     public void setHeightProportion(float height) {
         setHeight(height);
         float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
@@ -57,5 +68,23 @@ public class Sprite extends Rect {
     
     public void setScale(float scale) {
         this.scale = scale;
+    }
+    
+    // получаем массив текстур из региона
+    public static TextureRegion[] getRegionArr(TextureRegion region, int rowCount, int colCount, int frameCount) {
+        TextureRegion [] result = new TextureRegion[frameCount];
+        int frameWidth = region.getRegionWidth() / colCount;
+        int frameHeight = region.getRegionHeight() / rowCount;
+        int currentFrame = 0;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < colCount; j++) {
+                result[currentFrame] = new TextureRegion(region, i * rowCount, j * colCount, frameWidth, frameHeight);
+                if (currentFrame == frameCount - 1) {
+                    return result;
+                }
+                currentFrame++;
+            }
+        }
+        return null;
     }
 }

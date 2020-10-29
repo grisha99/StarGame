@@ -8,15 +8,16 @@ import ru.stargame.math.Rect;
 
 public class BaseShip extends Sprite{
 
-//    private Texture texture;            // изображение объекта
+
     private Vector2 position;           // текущая позиция
     private float speed;                // скорость передвижения
     private Vector2 direction;          // направление движения (нормализована)
     private Vector2 endPosition;        // конечноая точка
     private Vector2 tmp;
 
-    public BaseShip(Texture texture, float startX, float startY, float speed) {
-        super(new TextureRegion(texture));
+
+    public BaseShip(TextureRegion texture, float startX, float startY, float speed) {
+        super(texture, 1,2,2);
         pos.set(new Vector2(startX - (regions[frame].getRegionWidth() / 2f), startY));
         setSize(regions[frame].getRegionWidth(), regions[frame].getRegionHeight());
         this.speed = speed;
@@ -24,7 +25,8 @@ public class BaseShip extends Sprite{
         direction = new Vector2();
         tmp = new Vector2();
     }
-
+    
+    
     public void move() {
         tmp.set(endPosition);
 

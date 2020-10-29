@@ -1,18 +1,15 @@
 package ru.stargame.screen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.stargame.base.BaseScreen;
-import ru.stargame.base.BaseShip;
 import ru.stargame.math.Rect;
 import ru.stargame.ships.ExitButton;
 import ru.stargame.ships.PlayButton;
-import ru.stargame.ships.PlayerShip;
 import ru.stargame.sprite.Background;
 import ru.stargame.sprite.Star;
 

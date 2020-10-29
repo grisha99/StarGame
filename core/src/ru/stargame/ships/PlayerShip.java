@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.stargame.base.BaseShip;
+import ru.stargame.base.Ship;
 import ru.stargame.base.Sprite;
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
 import ru.stargame.sprite.Bullet;
 
-public class PlayerShip extends Sprite {
+public class PlayerShip extends Ship {
 
     
 //    public PlayerShip(TextureAtlas atlas, float startX, float startY, float speed){
@@ -23,19 +23,10 @@ public class PlayerShip extends Sprite {
     
     private static final float SHIP_HEIGHT = 0.15f;
     private static final float MARGIN = 0.05f;
-    private static final long AUTO_SHOOT_TIME = 150L; // задержка между выстрелами в миллиснкундах
+    private static final float RELOAD_INTERVAL = 0.2f;
+    private static final int HP = 100;
     
     private static final int INVALID_POINTER = -1;
-    
-    private Rect worldBounds;
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private Sound shootSount;
-    
-    private final Vector2 v = new Vector2();
-    private final Vector2 v0 = new Vector2(0.5f, 0);
-    private final Vector2 bulletV = new Vector2(0, 0.5f);
-    private final Vector2 bulletPos = new Vector2();
     
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -49,7 +40,14 @@ public class PlayerShip extends Sprite {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
-        shootSount = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        this.bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        this.bulletHeight = 0.01f;
+        this.damage = 1;
+        this.v0.set(0.5f, 0);
+        this.bulletV.set(0, 0.5f);
+        this.reloadInterval = RELOAD_INTERVAL;
+        this.hp = HP;
+
     }
     
     @Override
@@ -62,6 +60,8 @@ public class PlayerShip extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        bulletPos.set(pos.x, getTop());
+        super.update(delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -75,9 +75,10 @@ public class PlayerShip extends Sprite {
         //        } else if (getRight() < worldBounds.getLeft()) {
         //            setLeft(worldBounds.getRight());
         //        }
-        if (System.currentTimeMillis() - lastShootTime >= AUTO_SHOOT_TIME) { // автострельба
-            shoot();
-        }
+    }
+    
+    public void dispose() {
+        bulletSound.dispose();
     }
     
     @Override
@@ -130,9 +131,6 @@ public class PlayerShip extends Sprite {
                 pressedRight = true;
                 moveRight();
                 break;
-//            case Input.Keys.UP:
-//                shoot();
-//                break;
         }
         return false;
     }
@@ -172,13 +170,5 @@ public class PlayerShip extends Sprite {
     private void stop() {
         v.setZero();
     }
-    
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bulletPos.set(pos.x, getTop());
-        bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, 1, 0.01f);
-        shootSount.play(0.1f);
-        lastShootTime = System.currentTimeMillis();
-    }
-    
+   
 }

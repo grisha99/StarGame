@@ -33,9 +33,7 @@ public class PlayerShip extends Ship {
     
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
-    
-    private long lastShootTime;
-    
+
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
@@ -47,7 +45,7 @@ public class PlayerShip extends Ship {
         this.bulletV.set(0, 0.5f);
         this.reloadInterval = RELOAD_INTERVAL;
         this.hp = HP;
-
+        this.isInBattle = true;             // наш корабль сразу в бою
     }
     
     @Override
@@ -155,6 +153,9 @@ public class PlayerShip extends Ship {
                     stop();
                 }
                 break;
+//            case Input.Keys.UP:
+//                shoot();
+//                break;
         }
         return false;
     }

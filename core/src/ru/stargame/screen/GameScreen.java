@@ -13,8 +13,10 @@ import ru.stargame.base.BaseScreen;
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
 import ru.stargame.pool.EnemyShipPool;
+import ru.stargame.ships.EnemyShip;
 import ru.stargame.ships.PlayerShip;
 import ru.stargame.sprite.Background;
+import ru.stargame.sprite.Bullet;
 import ru.stargame.sprite.Star;
 import ru.stargame.utils.EnemyEmitter;
 
@@ -131,6 +133,19 @@ public class GameScreen extends BaseScreen {
     }
     
     private void checkCollision() {
+        for (Bullet b : bulletPool.getActiveObjects()) {
+            if(b.getOwner() != playerShip) {                // пуля не наша
+                continue;
+            }
+            for (EnemyShip es : enemyShipPool.getActiveObjects()) {
+                if (!b.isOutside(es)) {                     // пуля в границах вражеского корабля
+                    es.destroy();
+                    b.destroy();
+                    System.out.println("Destroy");
+                }
+                
+            }
+        }
     
     }
     

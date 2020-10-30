@@ -4,10 +4,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class EnemySettingsDto {
+public abstract class EnemySettingsDto {
     
     private TextureRegion[] regions;
     private Vector2 v0;
+    private Vector2 startSpeed = new Vector2(0f, -0.25f);   // скорость "выползания" на экран
     private TextureRegion bulletRegion;
     private float bulletHeight;
     private Vector2 bulletV;
@@ -16,6 +17,9 @@ public class EnemySettingsDto {
     private float reloadInterval;
     private float height;
     private int hp;
+    
+    
+    public abstract Vector2 getCruiseSpeed();
     
     public TextureRegion[] getRegions() {
         return regions;
@@ -31,6 +35,14 @@ public class EnemySettingsDto {
     
     public void setV0(Vector2 v0) {
         this.v0 = v0;
+    }
+    
+    public Vector2 getStartSpeed() {
+        return startSpeed;
+    }
+    
+    public void setStartSpeed(Vector2 startSpeed) {
+        this.startSpeed = startSpeed;
     }
     
     public TextureRegion getBulletRegion() {

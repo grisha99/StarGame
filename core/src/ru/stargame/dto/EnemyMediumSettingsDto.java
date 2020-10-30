@@ -15,11 +15,13 @@ public class EnemyMediumSettingsDto extends EnemySettingsDto {
     private static final int ENEMY_MEDIUM_DAMAGE = 5;
     private static final float ENEMY_MEDIUM_RELOAD_INTERVAL = 4f;
     private static final int ENEMY_MEDIUM_HP = 5;
+    private static final Vector2 CRUISE_SPEED = new Vector2(0f, -0.03f);    // крейсерская скорость
     
     public EnemyMediumSettingsDto(TextureAtlas atlas, Sound bulletSound) {
         TextureRegion enemy0 = atlas.findRegion("enemy1");
         setRegions(Sprite.getRegionArr(enemy0, 1, 2, 2));
-        setV0(new Vector2(0f, -0.03f));
+//        setV0(new Vector2(0f, -0.03f));
+        setV0(getStartSpeed());                                                 // быстрое появление на экране
         setBulletRegion(atlas.findRegion("bulletEnemy"));
         setBulletHeight(ENEMY_MEDIUM_BULLET_HEIGHT);
         setBulletV(new Vector2(0f, -0.25f));
@@ -28,5 +30,10 @@ public class EnemyMediumSettingsDto extends EnemySettingsDto {
         setReloadInterval(ENEMY_MEDIUM_RELOAD_INTERVAL);
         setHeight(ENEMY_MEDIUM_HEIGHT);
         setHp(ENEMY_MEDIUM_HP);
+    }
+    
+    @Override
+    public Vector2 getCruiseSpeed() {
+        return CRUISE_SPEED;
     }
 }

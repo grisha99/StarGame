@@ -15,11 +15,13 @@ public class EnemyBigSettingsDto extends EnemySettingsDto {
     private static final int ENEMY_BIG_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_BIG_HP = 10;
+    private static final Vector2 CRUISE_SPEED = new Vector2(0f, -0.005f);   // крейсерская скорость
     
     public EnemyBigSettingsDto(TextureAtlas atlas, Sound bulletSound) {
         TextureRegion enemy0 = atlas.findRegion("enemy2");
         setRegions(Sprite.getRegionArr(enemy0, 1, 2, 2));
-        setV0(new Vector2(0f, -0.005f));
+//        setV0(new Vector2(0f, -0.005f));
+        setV0(getStartSpeed());                                 // бысрое появление на экране
         setBulletRegion(atlas.findRegion("bulletEnemy"));
         setBulletHeight(ENEMY_BIG_BULLET_HEIGHT);
         setBulletV(new Vector2(0f, -0.25f));
@@ -28,5 +30,10 @@ public class EnemyBigSettingsDto extends EnemySettingsDto {
         setReloadInterval(ENEMY_BIG_RELOAD_INTERVAL);
         setHeight(ENEMY_BIG_HEIGHT);
         setHp(ENEMY_BIG_HP);
+    }
+    
+    @Override
+    public Vector2 getCruiseSpeed() {
+        return CRUISE_SPEED;
     }
 }

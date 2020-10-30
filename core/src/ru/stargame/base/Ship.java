@@ -20,6 +20,7 @@ public class Ship extends Sprite{
     
     protected final Vector2 v;
     protected final Vector2 v0;
+    protected final Vector2 cruiseSpeed;    // крейсерская скорость
     protected final Vector2 bulletV;
     protected final Vector2 bulletPos;
     
@@ -28,9 +29,12 @@ public class Ship extends Sprite{
     
     protected int hp;
     
+    protected boolean isInBattle;       // корабль в режиме боя (уже вышел из экрана)
+    
     public Ship() {
         v = new Vector2();
         v0 = new Vector2();
+        cruiseSpeed = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
     }
@@ -39,6 +43,7 @@ public class Ship extends Sprite{
         super(region, rows, cols, frames);
         v = new Vector2();
         v0 = new Vector2();
+        cruiseSpeed = new Vector2();
         bulletV = new Vector2();
         bulletPos = new Vector2();
     }
@@ -48,13 +53,13 @@ public class Ship extends Sprite{
         super.update(delta);
         pos.mulAdd(v, delta);
         reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
+        if (isInBattle && (reloadTimer >= reloadInterval)) {    // если уже в режиме боя и перезаряжены, стреляем
             reloadTimer = 0;
             shoot();
         }
     }
     
-    private void shoot() {
+    protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();

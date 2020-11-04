@@ -1,0 +1,46 @@
+package ru.stargame.ships;
+
+import ru.stargame.base.EnemySettingsDto;
+import ru.stargame.base.Ship;
+import ru.stargame.math.Rect;
+import ru.stargame.pool.BulletPool;
+
+public class EnemyShip extends Ship {
+    
+    public EnemyShip(BulletPool bulletPool, Rect worldBounds) {
+        this.bulletPool = bulletPool;
+        this.worldBounds = worldBounds;
+
+    }
+    
+    @Override
+    public void update(float delta) {
+        bulletPos.set(pos.x, getBottom());
+        if (!isInBattle) {                      // не в бою еще, за экраном
+            if (getTop() <= worldBounds.getTop()) {     // вышел на экран, в режим боя, крейсерская скорость и первый выстрел
+                v.set(cruiseSpeed);
+                isInBattle = true;
+                shoot();
+            }
+        }
+        super.update(delta);
+        if (getBottom() < worldBounds.getBottom()) {
+            destroy();
+        }
+    }
+    
+    public void set(EnemySettingsDto settings) {
+        this.regions = settings.getRegions();
+        this.v.set(settings.getV0());
+        this.cruiseSpeed.set(settings.getCruiseSpeed());
+        this.bulletRegion = settings.getBulletRegion();
+        this.bulletHeight = settings.getBulletHeight();
+        this.bulletV.set(settings.getBulletV());
+        this.bulletSound = settings.getBulletSound();
+        this.damage = settings.getDamage();
+        this.reloadInterval = settings.getReloadInterval();
+        setHeightProportion(settings.getHeight());
+        this.hp = settings.getHp();
+        isInBattle = false;                     // изначально за экраном, не в бою
+    }
+}

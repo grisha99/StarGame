@@ -95,7 +95,7 @@ public class Sprite extends Rect {
         int currentFrame = 0;
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < colCount; j++) {
-                result[currentFrame] = new TextureRegion(region, i * rowCount, j * colCount, frameWidth, frameHeight);
+                result[currentFrame] = new TextureRegion(region, j * frameWidth, i * frameHeight, frameWidth, frameHeight);
                 if (currentFrame == frameCount - 1) {
                     return result;
                 }

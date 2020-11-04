@@ -11,6 +11,7 @@ import ru.stargame.base.Ship;
 import ru.stargame.base.Sprite;
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
+import ru.stargame.pool.ExplosionPool;
 import ru.stargame.sprite.Bullet;
 
 public class PlayerShip extends Ship {
@@ -34,9 +35,10 @@ public class PlayerShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         this.bulletHeight = 0.01f;
@@ -77,6 +79,15 @@ public class PlayerShip extends Ship {
     
     public void dispose() {
         bulletSound.dispose();
+    }
+    
+    public boolean isBulletCollision(Rect bullet) {
+        return !(
+                bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom()
+        );
     }
     
     @Override

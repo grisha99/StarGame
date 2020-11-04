@@ -6,13 +6,18 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
+import ru.stargame.pool.ExplosionPool;
 import ru.stargame.sprite.Bullet;
+import ru.stargame.sprite.Explosion;
 
 public class Ship extends Sprite{
+    
+    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
     
     
     protected Rect worldBounds;
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
     protected Sound bulletSound;
     protected float bulletHeight;
@@ -28,6 +33,8 @@ public class Ship extends Sprite{
     protected float reloadInterval;
     
     protected int hp;
+    
+    private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
     
     protected boolean isInBattle;       // корабль в режиме боя (уже вышел из экрана)
     
@@ -57,11 +64,40 @@ public class Ship extends Sprite{
             reloadTimer = 0;
             shoot();
         }
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
     }
     
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, damage, bulletHeight);
         bulletSound.play();
+    }
+    
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
+    }
+    
+    public void damage(int damage) {
+        frame = 1;
+        damageAnimateTimer = 0f;
+        hp -= damage;
+        if (hp <= 0) {
+            hp = 0;
+            destroy();
+        }
+    }
+    
+    public int getDamage() {
+        return damage;
+    }
+    
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), pos);
     }
 }

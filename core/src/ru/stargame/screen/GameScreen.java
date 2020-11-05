@@ -17,10 +17,11 @@ import ru.stargame.pool.BulletPool;
 import ru.stargame.pool.EnemyShipPool;
 import ru.stargame.pool.ExplosionPool;
 import ru.stargame.ships.EnemyShip;
+import ru.stargame.ships.NewGameButton;
 import ru.stargame.ships.PlayerShip;
 import ru.stargame.sprite.Background;
 import ru.stargame.sprite.Bullet;
-import ru.stargame.sprite.Explosion;
+import ru.stargame.sprite.GameOver;
 import ru.stargame.sprite.Star;
 import ru.stargame.utils.EnemyEmitter;
 
@@ -48,11 +49,18 @@ public class GameScreen extends BaseScreen {
     
     private Music gameMusic;
     
+    private GameOver gameOver;
+    private boolean isGameOver;
+    
+    private NewGameButton newGameButton;
+    
     @Override
     public void show() {
         super.show();
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         bg = new Texture("textures/bg.png");
+        gameOver = new GameOver(atlas);
+        newGameButton = new NewGameButton(atlas, this);
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         enemyBulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         explosionSound = Gdx.audio.newSound((Gdx.files.internal("sounds/explosion.wav")));
@@ -72,6 +80,7 @@ public class GameScreen extends BaseScreen {
         gameMusic.play();
         gameMusic.setLooping(true);
         gameMusic.setVolume(1.5f);
+        isGameOver = false;
     }
     
     @Override
@@ -123,12 +132,18 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
 //        playerShip.setEndPosition(touch);
         playerShip.touchDown(touch, pointer, button);
+        if (isGameOver) {
+            newGameButton.touchDown(touch, pointer, button);
+        }
         return false;
     }
     
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         playerShip.touchUp(touch, pointer, button);
+        if (isGameOver) {
+            newGameButton.touchUp(touch, pointer, button);
+        }
         return false;
     }
     
@@ -140,8 +155,11 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyShipPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        enemyEmitter.generate(delta);
-        playerShip.update(delta);
+        
+        if (!isGameOver) {
+            playerShip.update(delta);
+            enemyEmitter.generate(delta);
+        }
     }
     
     private void checkCollision() {
@@ -166,6 +184,9 @@ public class GameScreen extends BaseScreen {
                 if (playerShip.isBulletCollision(bullet)) {
                     playerShip.damage(bullet.getDamage());
                     bullet.destroy();
+                    if (playerShip.isDestroyed()) {
+                        endGame();
+                    }
                     return;
                 }
                 continue;
@@ -187,16 +208,35 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-        playerShip.draw(batch);
-        enemyShipPool.drawActiveSprites(batch);
-        bulletPool.drawActiveSprites(batch);
-        explosionPool.drawActiveSprites(batch);
-        batch.end();
+
+        if (!isGameOver) {                          // рисуем все если игра не окончена
+            playerShip.draw(batch);
+            enemyShipPool.drawActiveSprites(batch);
+            bulletPool.drawActiveSprites(batch);
+            explosionPool.drawActiveSprites(batch);
+        } else {                                   // конец игры, рисуем только новую игру и смс об окончании
+            gameOver.draw(batch);
+            newGameButton.draw(batch);
+        }
+
+       batch.end();
     }
     
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveSprites();
         enemyShipPool.freeAllDestroyedActiveSprites();
         explosionPool.freeAllDestroyedActiveSprites();
+    }
+    
+    public void endGame() {                     // конец игры, ствим флаг и убираем всех актиыных с экрана
+        isGameOver = true;
+        enemyShipPool.freeAllActiveSprites();
+        bulletPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
+    }
+    
+    public void startNewGame() {                // новая игра, ставим флаг и даем своему кораблю здоровье
+        isGameOver = false;
+        playerShip.setHp(playerShip.getBaseHP());
     }
 }

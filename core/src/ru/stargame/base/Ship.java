@@ -96,6 +96,14 @@ public class Ship extends Sprite{
         return damage;
     }
     
+    public void setReloadTimer (int value) {
+        this.reloadTimer = value;
+    }
+    
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+    
     private void boom() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);

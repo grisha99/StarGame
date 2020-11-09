@@ -32,8 +32,10 @@ public class EnemySmallSettingsDto extends EnemySettingsDto {
     }
     
     @Override
-    public void setDamageForLevel(int level) {
+    public void setPowerForLevel(int level) {
         setDamage(ENEMY_SMALL_DAMAGE * level);
+        setBulletV(new Vector2(0f, -0.3f - ((level - 1) / 10f)));
+        setHp(ENEMY_SMALL_HP + level - 1);
     }
     
     @Override

@@ -2,17 +2,13 @@ package ru.stargame.ships;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.stargame.base.Ship;
-import ru.stargame.base.Sprite;
 import ru.stargame.math.Rect;
 import ru.stargame.pool.BulletPool;
 import ru.stargame.pool.ExplosionPool;
-import ru.stargame.sprite.Bullet;
 
 public class PlayerShip extends Ship {
 
@@ -25,7 +21,7 @@ public class PlayerShip extends Ship {
     private static final float SHIP_HEIGHT = 0.15f;
     private static final float MARGIN = 0.05f;
     private static final float RELOAD_INTERVAL = 0.2f;
-    private static final int HP = 100;
+    private static final int BASE_HP = 100;
     
     private static final int INVALID_POINTER = -1;
     
@@ -46,7 +42,7 @@ public class PlayerShip extends Ship {
         this.v0.set(0.5f, 0);
         this.bulletV.set(0, 0.5f);
         this.reloadInterval = RELOAD_INTERVAL;
-        this.hp = HP;
+        this.hp = BASE_HP;
         this.isInBattle = true;             // наш корабль сразу в бою
     }
     
@@ -75,6 +71,10 @@ public class PlayerShip extends Ship {
         //        } else if (getRight() < worldBounds.getLeft()) {
         //            setLeft(worldBounds.getRight());
         //        }
+    }
+    
+    public int getBaseHP() {
+        return BASE_HP;
     }
     
     public void dispose() {

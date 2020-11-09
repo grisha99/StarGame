@@ -22,6 +22,7 @@ public class EnemyShip extends Ship {
             if (getTop() <= worldBounds.getTop()) {     // вышел на экран, в режим боя, крейсерская скорость и первый выстрел
                 v.set(cruiseSpeed);
                 isInBattle = true;
+                setReloadTimer(0);              // избегаем двойного выстрела при вводе корабля в бой
                 shoot();
             }
         }

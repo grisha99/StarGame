@@ -33,6 +33,11 @@ public class EnemyBigSettingsDto extends EnemySettingsDto {
     }
     
     @Override
+    public void setDamageForLevel(int level) {
+        setDamage(ENEMY_BIG_DAMAGE * level);
+    }
+    
+    @Override
     public Vector2 getCruiseSpeed() {
         return CRUISE_SPEED;
     }

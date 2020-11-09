@@ -32,6 +32,11 @@ public class EnemySmallSettingsDto extends EnemySettingsDto {
     }
     
     @Override
+    public void setDamageForLevel(int level) {
+        setDamage(ENEMY_SMALL_DAMAGE * level);
+    }
+    
+    @Override
     public Vector2 getCruiseSpeed() {
         return CRUISE_SPEED;
     }

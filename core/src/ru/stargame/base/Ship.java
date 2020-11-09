@@ -104,6 +104,14 @@ public class Ship extends Sprite{
         this.hp = hp;
     }
     
+    public int getHp() {
+        return hp;
+    }
+    
+    public Vector2 getV() {
+        return v;
+    }
+    
     private void boom() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);

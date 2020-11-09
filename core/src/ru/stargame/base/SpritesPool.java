@@ -52,14 +52,8 @@ public abstract class SpritesPool<T extends Sprite> {
     }
     
     public void freeAllActiveSprites() {                    // убираем все активные (не уничтоженные) спрайты с экрана
-        for (int i = 0; i < activeObjects.size(); i++) {
-            T sprite = activeObjects.get(i);
-            if (!sprite.isDestroyed()) {
-                free(sprite);
-                i--;
-                sprite.flushDestroy();
-            }
-        }
+        freeObjects.addAll(activeObjects);
+        activeObjects.clear();
     }
     
     public List<T> getActiveObjects() {

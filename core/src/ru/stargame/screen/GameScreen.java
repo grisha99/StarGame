@@ -118,31 +118,38 @@ public class GameScreen extends BaseScreen {
     
     @Override
     public boolean keyDown(int keycode) {
-        playerShip.keyDown(keycode);
+        if (!isGameOver) {
+            playerShip.keyDown(keycode);
+        }
         return false;
     }
     
     @Override
     public boolean keyUp(int keycode) {
-        playerShip.keyUp(keycode);
+        if (!isGameOver) {
+            playerShip.keyUp(keycode);
+        }
         return false;
     }
     
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
 //        playerShip.setEndPosition(touch);
-        playerShip.touchDown(touch, pointer, button);
+        
         if (isGameOver) {
             newGameButton.touchDown(touch, pointer, button);
+        } else {
+            playerShip.touchDown(touch, pointer, button);
         }
         return false;
     }
     
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        playerShip.touchUp(touch, pointer, button);
         if (isGameOver) {
             newGameButton.touchUp(touch, pointer, button);
+        } else {
+            playerShip.touchUp(touch, pointer, button);
         }
         return false;
     }
@@ -152,17 +159,19 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        bulletPool.updateActiveSprites(delta);
-        enemyShipPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        
         if (!isGameOver) {
+            bulletPool.updateActiveSprites(delta);
+            enemyShipPool.updateActiveSprites(delta);
             playerShip.update(delta);
             enemyEmitter.generate(delta);
         }
     }
     
     private void checkCollision() {
+        if (isGameOver) {
+            return;
+        }
         List<EnemyShip> enemyShipList = enemyShipPool.getActiveObjects();
         for (EnemyShip enemyShip : enemyShipList) {
             if (enemyShip.isDestroyed()) {
@@ -172,6 +181,9 @@ public class GameScreen extends BaseScreen {
             if (enemyShip.pos.dst(playerShip.pos) < minDist) {
                 enemyShip.destroy();
                 playerShip.damage(enemyShip.getDamage());
+                if (playerShip.isDestroyed()) {
+                    endGame();
+                }
                 return;
             }
         }
@@ -208,12 +220,12 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-
+        explosionPool.drawActiveSprites(batch);
         if (!isGameOver) {                          // рисуем все если игра не окончена
             playerShip.draw(batch);
             enemyShipPool.drawActiveSprites(batch);
             bulletPool.drawActiveSprites(batch);
-            explosionPool.drawActiveSprites(batch);
+            
         } else {                                   // конец игры, рисуем только новую игру и смс об окончании
             gameOver.draw(batch);
             newGameButton.draw(batch);
@@ -232,7 +244,6 @@ public class GameScreen extends BaseScreen {
         isGameOver = true;
         enemyShipPool.freeAllActiveSprites();
         bulletPool.freeAllActiveSprites();
-        explosionPool.freeAllActiveSprites();
     }
     
     public void startNewGame() {                // новая игра, ставим флаг и даем своему кораблю здоровье

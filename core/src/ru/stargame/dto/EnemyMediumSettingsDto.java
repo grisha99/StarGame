@@ -33,8 +33,10 @@ public class EnemyMediumSettingsDto extends EnemySettingsDto {
     }
     
     @Override
-    public void setDamageForLevel(int level) {
+    public void setPowerForLevel(int level) {
         setDamage(ENEMY_MEDIUM_DAMAGE * level);
+        setBulletV(new Vector2(0f, -0.25f - ((level - 1) / 10f)));
+        setHp(ENEMY_MEDIUM_HP + level);
     }
     
     @Override

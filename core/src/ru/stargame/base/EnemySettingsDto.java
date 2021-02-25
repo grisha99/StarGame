@@ -19,7 +19,8 @@ public abstract class EnemySettingsDto {
     private int hp;
     
     
-    public abstract void setDamageForLevel(int level);
+    public abstract void setPowerForLevel(int level);
+    
     
     public abstract Vector2 getCruiseSpeed();
     

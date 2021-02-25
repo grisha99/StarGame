@@ -36,18 +36,18 @@ public class EnemyEmitter {
     public void generate(float delta, int frags) {
         level = frags / 10 + 1;
         generateTimer += delta;
-        if (generateTimer >= GENERATE_INTERVAL) {
+        if (generateTimer >= GENERATE_INTERVAL - (level / 5f)) {
             generateTimer = 0;
             EnemyShip enemyShip = enemyShipPool.obtain();
             float     type      = (float) Math.random();
             if (type < 0.5f) {
-                enemySmallSettingsDto.setDamageForLevel(level);
+                enemySmallSettingsDto.setPowerForLevel(level);
                 enemyShip.set(enemySmallSettingsDto);
             } else if (type < 0.8f) {
-                enemyMediumSettingsDto.setDamageForLevel(level);
+                enemyMediumSettingsDto.setPowerForLevel(level);
                 enemyShip.set(enemyMediumSettingsDto);
             } else {
-                enemyBigSettingsDto.setDamageForLevel(level);
+                enemyBigSettingsDto.setPowerForLevel(level);
                 enemyShip.set(enemyBigSettingsDto);
             }
             enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
